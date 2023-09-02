@@ -1,6 +1,7 @@
 function photographerTemplate(data) {
     const { name, portrait, city, country, tagline, price, id } = data;
 
+    console.log(data);
     const picture = `assets/photographers/${portrait}`;
 
     /**
@@ -77,7 +78,7 @@ function photographerTemplate(data) {
       return (header);
   }
 
-  
+
 
 
     return { name, picture, getUserCardDOM, getPhotographerDataDOM }
