@@ -1,5 +1,6 @@
 let photographerName = "";
 let photosFromJSON = "";
+
 /**
  * Récupération de l'id du photographe depuis l'url
  */

@@ -3,7 +3,7 @@ let selectedPhotographer = "";
 
 /** pattern factory */
 function mediaFactory(data, name, cptr) {
-    const { photographerId, title, image, video, likes, id } = data;
+    const { title, image, video, likes, id } = data;
 
     // liste photos constructor
     function getPhotosDOM() {
