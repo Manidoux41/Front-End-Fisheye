@@ -62,6 +62,7 @@ function mediaFactory(data, name, cptr) {
 
     return { getPhotosDOM }
 }
+
 /**
  * click ↑ nb de likes
  */

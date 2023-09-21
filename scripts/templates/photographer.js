@@ -63,9 +63,10 @@ function photographerFactory(data) {
         header.appendChild(container);
         header.appendChild(btn);
         header.appendChild(img);
-
+        
         return (header);
     }
-
+    
     return { name, picture, getUserCardDOM, getPhotographerDataDOM }
 }
+

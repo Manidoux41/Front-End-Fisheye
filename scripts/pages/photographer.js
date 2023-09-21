@@ -183,12 +183,16 @@ async function init() {
     const id = getPhotographerId();
 
     const data = await getPhotographerInfos(id);
+    console.log(getPhotographerInfos(id));
     displayInfos(data);
 
     const photos = await getPhotographerPhotos(id);
+    console.log(getPhotographerPhotos(id));
     displayPhotos(photos);
 
+
     displayPrice(data.price);
+    console.log(calculNbLikes(photos));
     displayLikesTotal(await calculNbLikes(photos));
 };
 
