@@ -1,6 +1,5 @@
 let photographerName = "";
 let photosFromJSON = "";
-
 /**
  * Récupération de l'id du photographe depuis l'url
  */
@@ -77,7 +76,92 @@ function displayPrice(price) {
     priceHtml.textContent = price + "€ / jour";
 };
 
+/** 
+ * Affichage des likes du photographe
+*/
+function displayLikesTotal(likesTotal) {
+    const likesTotalHtml = document.getElementById("likesTotal");
+    likesTotalHtml.textContent = likesTotal;
+};
 
+/** 
+ * Calcul des likes du photographe
+*/
+async function calculNbLikes(photos) {
+    let totLikes = 0;
+    for (let index = 0; index < photos.length; index++) {
+        totLikes += photos[index].likes;
+    }
+    return totLikes;
+};
+
+/**
+ * réordonne les médias
+ */
+async function OrderMedias() {
+    const tri = document.getElementById("tri").value;
+    switch (tri) {
+        case "date":
+            const photosOrderedByDate = await OrderByDate();
+            displayPhotos(photosOrderedByDate);
+            break;
+        case "titre":
+            const photosOrderByTitle = await OrderByTitle();
+            displayPhotos(photosOrderByTitle);
+            break;
+        case "popularite":
+            const photosOrderByLikes = await OrderByLikes();
+            displayPhotos(photosOrderByLikes);
+            break;
+        default:
+            break;
+    }
+}
+
+/**
+ * réordonne les médias par titre
+ */
+async function OrderByTitle() {
+    const photographers = await getJSON();
+
+    const photos = photographers.media.filter(media => media.photographerId == getPhotographerId());
+    const photoOrdered = photos.sort((a, b) => {
+        if (a.title < b.title) {
+            return -1;
+        }
+        if (a.title > b.title) {
+            return 1;
+        }
+        return 0;
+    });
+    return photoOrdered;
+}
+
+/**
+ * réordonne les médias par date
+ */
+async function OrderByDate() {
+    const photographers = await getJSON();
+
+    const photos = photographers.media.filter(media => media.photographerId == getPhotographerId());
+    const photoOrdered = photos.sort(function (a, b) {
+        return a.date - b.date;
+    });
+    return photoOrdered;
+}
+
+/**
+ * réordonne les médias par likes
+ */
+async function OrderByLikes() {
+    const photographers = await getJSON();
+
+    const photos = photographers.media.filter(media => media.photographerId == getPhotographerId());
+    const photoOrdered = photos.sort(function (a, b) {
+        return b.likes - a.likes;
+    });
+    return photoOrdered;
+}
 
 /**
  * recupère les données du fichier JSON
@@ -93,6 +177,9 @@ async function getJSON() {
  */
 async function init() {
 
+    EventOrderMedias();
+    EventCloseModale();
+
     const id = getPhotographerId();
 
     const data = await getPhotographerInfos(id);
@@ -101,9 +188,24 @@ async function init() {
     const photos = await getPhotographerPhotos(id);
     displayPhotos(photos);
 
+    displayPrice(data.price);
+    displayLikesTotal(await calculNbLikes(photos));
 };
 
 init();
 
+/**
+ * event listener fermeture modale contact
+ */
+function EventCloseModale() {
+    const modalClose = document.getElementById("modale-close");
+    modalClose.addEventListener("click", closeModal);
+}
 
-
+/**
+ * event listener fermeture modale contact
+ */
+function EventOrderMedias() {
+    const modalClose = document.querySelector(".select");
+    modalClose.addEventListener("change", OrderMedias);
+}

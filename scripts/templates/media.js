@@ -3,7 +3,7 @@ let selectedPhotographer = "";
 
 /** pattern factory */
 function mediaFactory(data, name, cptr) {
-    const { title, image, video, likes, id } = data;
+    const { photographerId, title, image, video, likes, id } = data;
 
     // liste photos constructor
     function getPhotosDOM() {
@@ -62,7 +62,78 @@ function mediaFactory(data, name, cptr) {
 
     return { getPhotosDOM }
 }
+/**
+ * click ↑ nb de likes
+ */
+function ClickLike(idPhoto) {
+    // on recupère le cookie des id des photos deja likées
+    let cookieIds = GetCookie("ids");
 
+    if (cookieIds == "") {
+        // si il est vide on écrit le premier id liké dedans
+        document.cookie = "ids=" + idPhoto;
+        DisplayLikesChanges(idPhoto);
+    } else {
+        // sinon on verif si l'id a deja été liké
+        tableauIds = cookieIds.split(",");
+        if (tableauIds.includes(idPhoto.toString())) {
+            alert("Vous avez déjà liké ce média.")
+        } else {
+            document.cookie = "ids=" + cookieIds + "," + idPhoto;
+            DisplayLikesChanges(idPhoto);
+        }
+    }
+}
+
+/**
+ * MAJ affichage media et likes
+ */
+async function DisplayLikesChanges(idPhoto) {
+    const id = getPhotographerId();
+    const photos = await getPhotographerPhotos(id);
+
+    // on fait les changements dans le json
+    for (let index = 0; index < photos.length; index++) {
+        if (photos[index].id == idPhoto) {
+            photos[index].likes++;
+        }
+    }
+    displayPhotos(photos);
+    displayLikesTotal(await calculNbLikes(photos));
+}
+
+/**
+ * 
+ * @param nomDuCookie 
+ * @returns cookie 
+ */
+function GetCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+/**
+ * click affichage photo dans caroussel
+ */
+function ClickOnMedia(title, name, image, video, cptr) {
+    DisplayLightBox();
+
+    DisplayMedia(image, name, video, title);
+
+    selectedMedia = cptr;
+    selectedPhotographer = name;
+}
 
 function DisplayMedia(image, name, video, title) {
     const mediaContainer = document.getElementById("lightbox-media");
@@ -84,4 +155,15 @@ function DisplayMedia(image, name, video, title) {
     mediaTitle.textContent = title;
 }
 
+/**
+ * display light box
+ */
+function DisplayLightBox() {
+    const lightbox = document.getElementById("lightbox");
+    lightbox.style.display = "block";
+    lightbox.setAttribute("aria-hidden", false);
+    lightboxOpened = true;
 
+    const main = document.getElementById("main");
+    main.setAttribute("aria-hidden", true);
+}
