@@ -19,7 +19,7 @@ async function displayData(photographers) {
         const userCardDOM = photographerModel.getUserCardDOM();
         photographersSection.appendChild(userCardDOM);
     });
-};
+}
 
 /**
  * Récupère les données des photographes
@@ -27,7 +27,7 @@ async function displayData(photographers) {
 async function init() {
     const { photographers } = await getPhotographers();
     displayData(photographers);
-};
+}
 
 init();
 
