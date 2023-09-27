@@ -168,3 +168,5 @@ function DisplayLightBox() {
     const main = document.getElementById("main");
     main.setAttribute("aria-hidden", true);
 }
+
+
