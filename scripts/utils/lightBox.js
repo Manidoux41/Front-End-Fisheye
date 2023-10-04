@@ -15,7 +15,7 @@ function Init() {
     // event listener sur touche navigation lightbox
     window.addEventListener("keydown", function (event) {
         if (lightboxOpened) {
-            if (event.code === "ArrowLeft") {
+            if (event.code === "ArrowLef") {
                 // Handle "left"
                 DisplayPreviousMedia();
             } else if (event.code === "ArrowRight") {
