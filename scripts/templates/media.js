@@ -8,9 +8,9 @@ function mediaFactory(data, name, cptr) {
     // liste photos constructor
     function getPhotosDOM() {
         const article = document.createElement('article');
-
         let img = document.createElement('img');
         img.setAttribute('alt', name);
+        img.setAttribute('tabindex', '0');
 
         if (image === undefined) {
             img.setAttribute('role', "navigation");
@@ -21,6 +21,7 @@ function mediaFactory(data, name, cptr) {
             img.addEventListener("click", function () {
                 ClickOnMedia(title, name, image, video, cptr);
             });
+
         } else {
             img.setAttribute('role', "navigation");
             let picture = `assets/photos/${name}/${image}`;
@@ -28,6 +29,11 @@ function mediaFactory(data, name, cptr) {
             img.setAttribute('alt', name + " " + title);
             img.addEventListener("click", function () {
                 ClickOnMedia(title, name, image, video, cptr);
+            });
+            img.addEventListener("keydown", function (e) {
+                if (e.key === "Enter") {
+                    ClickOnMedia(title, name, image, video, cptr);
+                }
             });
         }
 
