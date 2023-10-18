@@ -50,9 +50,15 @@ function mediaFactory(data, name, cptr) {
         p2.textContent = likes;
 
         const linkLikes = document.createElement('a');
+        linkLikes.setAttribute("role", "button");
+        linkLikes.setAttribute("aria-label", "like");
+        linkLikes.setAttribute("tabindex", "0");
         linkLikes.className = "red fa-solid fa-heart";
 
         linkLikes.addEventListener("click", function () {
+            ClickLike(id);
+        });
+        linkLikes.addEventListener("keydown", function () {
             ClickLike(id);
         });
 
