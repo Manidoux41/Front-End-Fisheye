@@ -58,8 +58,10 @@ function mediaFactory(data, name, cptr) {
         linkLikes.addEventListener("click", function () {
             ClickLike(id);
         });
-        linkLikes.addEventListener("keydown", function () {
-            ClickLike(id);
+        linkLikes.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+                ClickLike(id);
+            }           
         });
 
         article.appendChild(img);
