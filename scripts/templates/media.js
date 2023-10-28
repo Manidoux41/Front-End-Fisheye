@@ -78,24 +78,49 @@ function mediaFactory(data, name, cptr) {
 /**
  * click ↑ nb de likes
  */
+
 /* function ClickLike(idPhoto) {
-    // on recupère le cookie des id des photos deja likées
+    // On récupère le cookie des ID des photos déjà likées
     let cookieIds = GetCookie("ids");
 
     if (cookieIds == "") {
-        // si il est vide on écrit le premier id liké dedans
+        // Si le cookie est vide, on écrit le premier ID liké dedans et on l'incrémente
         document.cookie = "ids=" + idPhoto;
-        DisplayLikesChanges(idPhoto);
+        DisplayLikesChanges(idPhoto, 1);
     } else {
-        // sinon on verif si l'id a deja été liké
-        tableauIds = cookieIds.split(",");
+        // Sinon, on vérifie si l'ID a déjà été liké
+        let tableauIds = cookieIds.split(",");
         if (tableauIds.includes(idPhoto.toString())) {
-            alert("Vous avez déjà liké ce média.")
+            // Si l'ID a déjà été liké, on le supprime du cookie et on le décrémente
+            tableauIds = tableauIds.filter(item => item !== idPhoto.toString());
+            document.cookie = "ids=" + tableauIds.join(",");
+            DisplayLikesChanges(idPhoto, -1);
         } else {
+            // Sinon, on l'ajoute au cookie et on l'incrémente
             document.cookie = "ids=" + cookieIds + "," + idPhoto;
-            DisplayLikesChanges(idPhoto);
+            DisplayLikesChanges(idPhoto, 1);
         }
     }
+} */
+
+
+
+/**
+ * MAJ affichage media et likes
+ */
+/* async function DisplayLikesChanges(idPhoto) {
+    const id = getPhotographerId();
+    const photos = await getPhotographerPhotos(id);
+
+    // on fait les changements dans le json
+    for (let index = 0; index < photos.length; index++) {
+        if (photos[index].id == idPhoto) {
+            photos[index].likes++;
+        }
+
+    }
+    displayPhotos(photos);
+    displayLikesTotal(await calculNbLikes(photos));
 } */
 
 function ClickLike(idPhoto) {
@@ -122,22 +147,24 @@ function ClickLike(idPhoto) {
     }
 }
 
-
-
 /**
- * MAJ affichage media et likes
+ * MAJ affichage média et likes
  */
-async function DisplayLikesChanges(idPhoto) {
-    const id = getPhotographerId();
-    const photos = await getPhotographerPhotos(id);
+async function DisplayLikesChanges(idPhoto, increment) {
+    // Ici, vous pouvez mettre à jour les likes dans votre système, par exemple, en interagissant avec une base de données, un stockage ou un JSON.
 
-    // on fait les changements dans le json
+    // Supposons que vous ayez une fonction pour obtenir les photos du photographe.
+    const photographerId = getPhotographerId();
+    const photos = await getPhotographerPhotos(photographerId);
+
     for (let index = 0; index < photos.length; index++) {
         if (photos[index].id == idPhoto) {
-            photos[index].likes++;
+            photos[index].likes += increment;
         }
-
+        
     }
+
+    // Ensuite, vous pouvez mettre à jour l'affichage des photos et le total des likes.
     displayPhotos(photos);
     displayLikesTotal(await calculNbLikes(photos));
 }
