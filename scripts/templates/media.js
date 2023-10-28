@@ -78,7 +78,7 @@ function mediaFactory(data, name, cptr) {
 /**
  * click ↑ nb de likes
  */
-function ClickLike(idPhoto) {
+/* function ClickLike(idPhoto) {
     // on recupère le cookie des id des photos deja likées
     let cookieIds = GetCookie("ids");
 
@@ -96,7 +96,33 @@ function ClickLike(idPhoto) {
             DisplayLikesChanges(idPhoto);
         }
     }
+} */
+
+function ClickLike(idPhoto) {
+    // On récupère le cookie des ID des photos déjà likées
+    let cookieIds = GetCookie("ids");
+
+    if (cookieIds == "") {
+        // Si le cookie est vide, on écrit le premier ID liké dedans et on l'incrémente
+        document.cookie = "ids=" + idPhoto;
+        DisplayLikesChanges(idPhoto, 1);
+    } else {
+        // Sinon, on vérifie si l'ID a déjà été liké
+        let tableauIds = cookieIds.split(",");
+        if (tableauIds.includes(idPhoto.toString())) {
+            // Si l'ID a déjà été liké, on le supprime du cookie et on le décrémente
+            tableauIds = tableauIds.filter(item => item !== idPhoto.toString());
+            document.cookie = "ids=" + tableauIds.join(",");
+            DisplayLikesChanges(idPhoto, -1);
+        } else {
+            // Sinon, on l'ajoute au cookie et on l'incrémente
+            document.cookie = "ids=" + cookieIds + "," + idPhoto;
+            DisplayLikesChanges(idPhoto, 1);
+        }
+    }
 }
+
+
 
 /**
  * MAJ affichage media et likes
@@ -110,10 +136,12 @@ async function DisplayLikesChanges(idPhoto) {
         if (photos[index].id == idPhoto) {
             photos[index].likes++;
         }
+
     }
     displayPhotos(photos);
     displayLikesTotal(await calculNbLikes(photos));
 }
+
 
 /**
  * 
